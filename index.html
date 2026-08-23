@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+<title>chat Ai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <h1>AI<span>.</span>Chat</h1>
+    <button class="key-toggle" id="keyToggle">API Key</button>
+  </header>
+
+  <div class="key-panel" id="keyPanel">
+    <label for="apiKey">Google Gemini API Key</label>
+    <input type="password" id="apiKey" placeholder="AIza...">
+    <small>Key sirf is browser session mein memory mein rehti hai, kahin save nahi hoti. Free key <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--violet)">yahan se</a> milegi.</small>
+  </div>
+
+  <div class="chat-window" id="chatWindow">
+    <div class="msg bot">Hi! Main aapka AI assistant hoon. Pehle upar "API Key" button dabakar apni Gemini key daal dein, phir mujhse kuch bhi pooch sakte hain.</div>
+  </div>
+
+  <form id="chatForm">
+    <input type="text" id="userInput" placeholder="Apna message likhein..." autocomplete="off" required>
+    <button type="submit" id="sendBtn">➤</button>
+  </form>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
