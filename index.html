@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+<title>AI Chatbot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <div class="header-left">
+      <div class="avatar-icon">AI</div>
+      <div>
+        <h1>AI<span>.</span>Chat</h1>
+        <p class="status"><span class="dot-online"></span>Online</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="searchToggle" title="Chat mein dhundhein">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </button>
+      <button class="icon-btn" id="pinnedToggle" title="Pinned messages">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14l-1.5-1.5A3.5 3.5 0 0 1 16.5 13V8a1 1 0 0 0-1-1h-7a1 1 0 0 0-1 1v5a3.5 3.5 0 0 1-1 2.5L5 17z"></path></svg>
+      </button>
+      <button class="icon-btn" id="settingsToggle" title="Settings">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </button>
+      <button class="icon-btn" id="chatsToggle" title="Sab chats">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+      </button>
+      <button class="key-toggle" id="keyToggle">Key</button>
+    </div>
+  </header>
+
+  <div class="key-panel" id="keyPanel">
+    <label for="apiKey">Groq API Key</label>
+    <input type="password" id="apiKey" placeholder="gsk_...">
+    <small>Key sirf is browser mein save hoti hai. Free key <a href="https://console.groq.com/keys" target="_blank" style="color:var(--violet)">yahan se</a> milegi.</small>
+  </div>
+
+  <div class="chat-window" id="chatWindow"></div>
+  <button type="button" class="scroll-bottom-btn" id="scrollBottomBtn" title="Neeche jaayein">↓</button>
+
+  <div class="char-count" id="charCount" style="display:none;"></div>
+
+  <div class="image-preview" id="imagePreview" style="display:none;">
+    <img id="previewImg" src="" alt="preview">
+    <button type="button" id="removeImage">✕</button>
+  </div>
+
+  <form id="chatForm">
+    <button type="button" class="icon-btn attach-btn" id="attachBtn" title="Add">+</button>
+    <button type="button" class="icon-btn mic-btn" id="micBtn" title="Bol kar likhein">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+        <line x1="12" y1="19" x2="12" y2="23"></line>
+        <line x1="8" y1="23" x2="16" y2="23"></line>
+      </svg>
+    </button>
+    <input type="text" id="userInput" placeholder="Apna message likhein..." autocomplete="off">
+    <button type="submit" id="sendBtn" title="Bhejein">➤</button>
+  </form>
+
+  <!-- Add photo sheet -->
+  <div class="sheet-overlay" id="sheetOverlay">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header"><span></span><h3>Add to chat</h3><button type="button" id="sheetClose">✕</button></div>
+      <div class="sheet-options">
+        <button type="button" class="sheet-option" id="cameraOption"><div class="sheet-icon">📷</div><span>Camera</span></button>
+        <button type="button" class="sheet-option" id="galleryOption"><div class="sheet-icon">🖼️</div><span>Photos</span></button>
+      </div>
+      <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
+      <input type="file" id="galleryInput" accept="image/*" hidden>
+    </div>
+  </div>
+
+  <!-- Chats list sheet -->
+  <div class="sheet-overlay" id="chatsOverlay">
+    <div class="sheet chats-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header"><span></span><h3>Aapki Chats</h3><button type="button" id="chatsClose">✕</button></div>
+      <button type="button" class="new-chat-btn" id="newChatBtn">+ Nayi Chat</button>
+      <div class="chats-list" id="chatsList"></div>
+    </div>
+  </div>
+
+  <!-- Search sheet -->
+  <div class="sheet-overlay" id="searchOverlay">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header"><span></span><h3>Chat mein dhundhein</h3><button type="button" id="searchClose">✕</button></div>
+      <input type="text" id="searchInput" class="sheet-search-input" placeholder="Kuch bhi type karein...">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </div>
+
+  <!-- Pinned sheet -->
+  <div class="sheet-overlay" id="pinnedOverlay">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header"><span></span><h3>📌 Pinned Messages</h3><button type="button" id="pinnedClose">✕</button></div>
+      <div class="search-results" id="pinnedResults"></div>
+    </div>
+  </div>
+
+  <!-- Settings sheet -->
+  <div class="sheet-overlay" id="settingsOverlay">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header"><span></span><h3>Settings</h3><button type="button" id="settingsClose">✕</button></div>
+
+      <div class="settings-group">
+        <div class="settings-label">Jawab kis bhasha mein aaye?</div>
+        <div class="toggle-group" id="langToggle">
+          <button type="button" data-val="auto" class="toggle-opt">Auto</button>
+          <button type="button" data-val="hi" class="toggle-opt">Hindi</button>
+          <button type="button" data-val="en" class="toggle-opt">English</button>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-label">Jawab kitna lamba ho?</div>
+        <div class="toggle-group" id="lengthToggle">
+          <button type="button" data-val="short" class="toggle-opt">Chhota</button>
+          <button type="button" data-val="normal" class="toggle-opt">Normal</button>
+          <button type="button" data-val="long" class="toggle-opt">Detailed</button>
+        </div>
+      </div>
+
+      <div class="settings-group settings-row">
+        <div class="settings-label">Typing sound</div>
+        <label class="switch">
+          <input type="checkbox" id="soundToggle">
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+
+      <div class="settings-group settings-row">
+        <div class="settings-label">Dark mode</div>
+        <label class="switch">
+          <input type="checkbox" id="themeToggleCheckbox">
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+
+      <button type="button" class="new-chat-btn" id="exportBtn">⬇ Chat export karein (.txt)</button>
+      <button type="button" class="new-chat-btn danger-btn" id="clearBtn">🗑 Ye chat clear karein</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
